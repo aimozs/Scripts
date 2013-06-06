@@ -37,7 +37,7 @@ public class EnemyAttack : MonoBehaviour {
 		
 		float direction = Vector3.Dot (dir, transform.forward);
 			
-		Debug.Log(direction);
+		Debug.Log(distance);
 		
 		if(distance < 2.5f){
 			if(direction > 0.4f) {

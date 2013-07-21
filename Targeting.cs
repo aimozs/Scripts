@@ -73,6 +73,10 @@ public class Targeting : MonoBehaviour {
 	private void SelectTarget()
 	{
 		Debug.DrawLine(selectedTarget.position, myTransform.position, Color.red);
+		
+		PlayerAttack pa = (PlayerAttack)GetComponent("PlayerAttack");
+		
+		pa.target = selectedTarget.gameObject;
 	
 	}
 	

@@ -23,36 +23,5 @@ public enum AttributeName{
 		apparenceSA,
 		manipulationSA,
 		composureSA,
-				
-	//mental
-		academicsMS,
-		computerMS,
-		craftsMS,
-		investigationMS,
-		medicineMS,
-		occultMS,
-		politicsMS,
-		scienceMS,
-				
-	//physic
-		athleticsPS,
-		brawlPS,
-		drivePS,
-		firearmsPS,
-		larcenyPS,
-		stealthPS,
-		survivalPS,
-		weaponryPS,
-				
-	//social
-		animalKenSS,
-		empathySS,
-		expressionSS,
-		intimidationSS,
-		persuasionSS,
-		socializeSS,
-		streetwiseSS,
-		subterfugeSS
-
 
 }

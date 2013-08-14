@@ -35,4 +35,5 @@ transform.localRotation = Quaternion.Slerp(transform.localRotation, target1, Tim
 //Activate the Main function when player is near the door
 function OnInteract() {
 open = !open;
+
 }

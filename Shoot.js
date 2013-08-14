@@ -1,4 +1,4 @@
-var bullitPrefab:GameObject;
+var bullitPrefab : GameObject;
 var spawnPoint : Transform;
 
 function Update () {

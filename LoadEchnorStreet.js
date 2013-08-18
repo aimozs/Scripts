@@ -2,7 +2,6 @@
 //in unity, assign the index level to load for each
 var level : int;
 var player : GameObject;
-var lastScene : int;
 
 
 function Awake () {
@@ -10,33 +9,16 @@ function Awake () {
 	player = GameObject.Find("First Person Controller");
 	// Make this game object and all its transform children survive when loading a new scene.
 	DontDestroyOnLoad (player);
-	lastScene = Application.loadedLevel;
-	
 		
 }
 	
 function OnLevelWasLoaded (level: int) {
 
 	if (level == 1) {
-		player.transform.position = GameObject.Find("644doorFront").transform.position;
-		Debug.Log("lafontaine loaded");
-		Debug.Log(lastScene);
+		player.transform.position = GameObject.Find("SFDE").transform.position;
+		Debug.Log("you have been spawn in front of Echnor's tower");
 		
 	}
-	
-	if (level == 2) {
-		player.transform.position = GameObject.Find("644doorFront").transform.position;
-		Debug.Log("644 loaded");
-		Debug.Log(lastScene);
-		
-	}
-
-	if (level == 3) {
-		player.transform.position = GameObject.Find("echnorLift").transform.position;
-		Debug.Log("echnor loaded");
-		Debug.Log(lastScene);
-	}
-
 }
 
 

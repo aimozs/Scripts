@@ -31,13 +31,14 @@ public class EnemyAttack : MonoBehaviour {
 	}
 	
 	private void Attack() {
+		target = GameObject.Find("First Person Controller");
 		float distance = Vector3.Distance (target.transform.position, transform.position);
 		
 		Vector3 dir = (target.transform.position - transform.position).normalized;
 		
 		float direction = Vector3.Dot (dir, transform.forward);
 			
-		Debug.Log(distance);
+		//Debug.Log(distance);
 		
 		if(distance < 2.5f){
 			if(direction > 0.4f) {

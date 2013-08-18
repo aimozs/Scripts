@@ -25,7 +25,7 @@ public class EnemyAI : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		Debug.DrawLine(target.position, myTransform.position, Color.red);
+		//Debug.DrawLine(target.position, myTransform.position, Color.red);
 		
 		// Look at target
 		myTransform.rotation = Quaternion.Slerp(myTransform.rotation, Quaternion.LookRotation(target.position - myTransform.position), rotationSpeed * Time.deltaTime);

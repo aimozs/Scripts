@@ -1,6 +1,11 @@
 var bullitPrefab : GameObject;
 var spawnPoint : Transform;
 
+
+function Awake () {
+		
+}
+
 function Update () {
 
 	if(Input.GetButtonDown("Fire1"))

@@ -55,48 +55,63 @@ public class BaseCharacter : MonoBehaviour {
 		
 	}
 	
-	
+//setup the basic value	
 	private void SetupPrimaryAttribute() {
 		for(int cnt = 0; cnt < _primaryAttribute.Length; cnt++) {
-			_primaryAttribute[cnt] = new Attribute();
-		}
+			_primaryAttribute[cnt] = new Attribute(); }
 	}
 	
 	private void SetupVital() {
 		for(int cnt = 0; cnt < _vital.Length; cnt++) {
-			_vital[cnt] = new Vital();
-		}
+			_vital[cnt] = new Vital(); }
+		
+		SetupVitalModifiers();
 	}
 	
 	private void SetupSkill() {
 		for(int cnt = 0; cnt < _skill.Length; cnt++) {
-			_skill[cnt] = new Skill();
-		}
+			_skill[cnt] = new Skill(); }
+		
+		SetupSkillModifiers();
 	}
 	
+//Getters for base values
 	public Attribute GetPrimaryAttribute (int index) {
 		 return _primaryAttribute[index];
 	}
 	
-		public Vital GetVital (int index) {
+	public Vital GetVital (int index) {
 		 return _vital[index];
 	}
 	
-		public Skill GetSkill (int index) {
+	public Skill GetSkill (int index) {
 		 return _skill[index];
 	}
 	
+//modify vitals, based on attributes
 	private void SetupVitalModifiers() {
+		
+		/*ModifyingAttribute health = new ModifyingAttribute();
+		health.attribute = GetPrimaryAttribute((int)AttributeName.staminaPA);
+		health.ratio = .5f;
+		GetVital ((int)VitalName.Health).AddModifier(health);
+		*/
+		
 		//health
-		GetVital((int)VitalName.Health).AddModifier(new ModifyingAttribute { attribute = GetPrimaryAttribute((int)AttributeName.staminaPA), ratio = .5f});
-		
+		GetVital((int)VitalName.Health).AddModifier(new ModifyingAttribute { attribute = GetPrimaryAttribute((int)AttributeName.staminaPA), ratio = 1});
 		//humanity
-		GetVital((int)VitalName.Humanity).AddModifier(new ModifyingAttribute { attribute = GetPrimaryAttribute((int)SkillName.empathySS), ratio = 1});
-		
+		GetVital((int)VitalName.Humanity).AddModifier(new ModifyingAttribute { attribute = GetPrimaryAttribute((int)AttributeName.intelligenceMA), ratio = 1});
 		//vitae
-		GetVital((int)VitalName.Vitae).AddModifier(new ModifyingAttribute { attribute = GetPrimaryAttribute((int)SkillName.occultMS), ratio = 1});
+		GetVital((int)VitalName.Vitae).AddModifier(new ModifyingAttribute { attribute = GetPrimaryAttribute((int)AttributeName.dexterityPA), ratio = 1});
+		
+		
+		/*/Quick version but doesnt work\
+		GetVital((int)VitalName.Health).AddModifier(new ModifyingAttribute(GetPrimaryAttribute((int)AttributeName.staminaPA), .5f));
+		GetVital((int)VitalName.Humanity).AddModifier(new ModifyingAttribute(GetPrimaryAttribute((int)SkillName.empathySS), 1));
+		GetVital((int)VitalName.Vitae).AddModifier(new ModifyingAttribute(GetPrimaryAttribute((int)SkillName.occultMS), 1));*/
 	}
-	
+
+//modify skills, based on attributes
 	private void SetupSkillModifiers() {
 		
 		//physic
@@ -129,7 +144,6 @@ public class BaseCharacter : MonoBehaviour {
 		GetSkill((int)SkillName.streetwiseSS).AddModifier(new ModifyingAttribute { attribute = GetPrimaryAttribute((int)AttributeName.composureSA), ratio = 1});
 		GetSkill((int)SkillName.subterfugeSS).AddModifier(new ModifyingAttribute { attribute = GetPrimaryAttribute((int)AttributeName.manipulationSA), ratio = 1});
 		
-	
 	}
 	
 	public void StatUpdate(){

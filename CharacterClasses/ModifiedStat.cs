@@ -9,7 +9,7 @@ public class ModifiedStat : BaseStat{
 		_modValue = 0;
 	}
 	
-	public void AddModifier( ModifyingAttribute mod) {
+	public void AddModifier(ModifyingAttribute mod) {
 		_mods.Add(mod);
 	}
 	
@@ -36,4 +36,9 @@ public class ModifiedStat : BaseStat{
 public struct ModifyingAttribute {
 	public Attribute attribute;
 	public float ratio;
+	
+	public ModifyingAttribute(Attribute att, float rat) {
+		attribute = att;
+		ratio = rat;
+	}
 }

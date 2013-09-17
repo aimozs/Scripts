@@ -24,7 +24,7 @@ public class CharacterGenerator : MonoBehaviour {
 	
 //GUI style
 	
-//	public GUISkin	VentrueSkin;
+	public GUISkin	VentrueSkin;
 	
 	
 // Use this for initialization
@@ -108,37 +108,41 @@ public class CharacterGenerator : MonoBehaviour {
 //2nd line (250 from top +30 for each attribute), Intelligence etc...
 	private void DisplayAttribute() {
 		for(int cnt = 0; cnt < Enum.GetValues(typeof(AttributeName)).Length; cnt++) {
+//display Attribute Name
 			GUI.Label(new Rect(	Offset,
 								250+LINE_HEIGHT*cnt,
 								StatLabelWidth,
 								LINE_HEIGHT),
 								((AttributeName)cnt).ToString() );
-			
+//display minus button
 			if(GUI.Button(new Rect(	Offset*2 + StatLabelWidth,
 									250+LINE_HEIGHT*cnt,
 									BUTTON_WIDTH,
 									LINE_HEIGHT),
 									"-")){
+//transfer back to expPoints if click
 				if(_toon.GetPrimaryAttribute(cnt).BaseValue > MIN_STARTING_ATTRIBUTE_VALUE) {
 					_toon.GetPrimaryAttribute(cnt).BaseValue--;
-					expPointsLeft++;
+					expPointsLeft = expPointsLeft + _toon.GetPrimaryAttribute(cnt).BaseValue + 1;
 					_toon.StatUpdate();
 				}
 			}
+//display the attribute value
 			GUI.Label(new Rect(	Offset*4 + StatLabelWidth + BUTTON_WIDTH,
 								250+LINE_HEIGHT*cnt,
 								BASEVALUE_LABEL_WIDTH,
 								LINE_HEIGHT),
 								_toon.GetPrimaryAttribute(cnt).AdjustedBaseValue.ToString());
-
+//display plus button
 			if(GUI.Button(new Rect(	Offset*6 + StatLabelWidth + BUTTON_WIDTH + BASEVALUE_LABEL_WIDTH,
 									250+LINE_HEIGHT*cnt,
 									BUTTON_WIDTH,
 									LINE_HEIGHT),
 									"+")) {
-				if(expPointsLeft > 0) {
+//add point to Attribute and substract from expPoints
+				if(expPointsLeft > _toon.GetPrimaryAttribute(cnt).BaseValue) {
 					_toon.GetPrimaryAttribute(cnt).BaseValue++;
-					expPointsLeft--;
+					expPointsLeft = expPointsLeft - _toon.GetPrimaryAttribute(cnt).BaseValue;
 					_toon.StatUpdate();
 				}
 			}
@@ -147,18 +151,23 @@ public class CharacterGenerator : MonoBehaviour {
 	}
 	
 	
-//3rd line but 2nd column
+//2nd column, skills like brawl, drive, larceny, stealth, etc..
 	private void DisplaySkills() {
 		for(int cnt = 0; cnt < Enum.GetValues(typeof(SkillName)).Length; cnt++) {
+//display skill name
 			GUI.Label(new Rect(StatLabelWidth*2, 100+LINE_HEIGHT*cnt, StatLabelWidth, LINE_HEIGHT), ((SkillName)cnt).ToString() );
+//display minus button
 			if(GUI.Button(new Rect(StatLabelWidth*3, 100+LINE_HEIGHT*cnt, BUTTON_WIDTH, LINE_HEIGHT), "-")){
+//transfer exp back to expPoints if player click on it
 				if(_toon.GetPrimaryAttribute(cnt).BaseValue > MIN_STARTING_ATTRIBUTE_VALUE) {
 					_toon.GetPrimaryAttribute(cnt).BaseValue--;
 					expPointsLeft++;
 					_toon.StatUpdate();
 				}
 			}
+//display plus button
 			GUI.Label(new Rect(StatLabelWidth*3 + Offset*2 + BUTTON_WIDTH, 100+LINE_HEIGHT*cnt, BASEVALUE_LABEL_WIDTH, LINE_HEIGHT), _toon.GetSkill(cnt).AdjustedBaseValue.ToString()) ;
+//transfer expPoints to skills
 			if(GUI.Button(new Rect(StatLabelWidth*3 + Offset*2 + BUTTON_WIDTH + BASEVALUE_LABEL_WIDTH, 100+LINE_HEIGHT*cnt, BUTTON_WIDTH, LINE_HEIGHT), "+")){
 				if(_toon.GetPrimaryAttribute(cnt).BaseValue > MIN_STARTING_ATTRIBUTE_VALUE) {
 					_toon.GetPrimaryAttribute(cnt).BaseValue++;
@@ -177,6 +186,9 @@ public class CharacterGenerator : MonoBehaviour {
 							StatLabelWidth,
 							LINE_HEIGHT), "Create")) {
 			GameSettings gsScript = GameObject.Find("__GameSettings").GetComponent<GameSettings>();
+			
+			//change the cur value of the vitals to the max of the modified value
+			
 			gsScript.SaveCharacterData();
 				
 			Application.LoadLevel("parcLaf");

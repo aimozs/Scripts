@@ -21,7 +21,7 @@ public class GameSettings : MonoBehaviour {
 		GameObject player = GameObject.Find("Player");
 		
 //use that line below once if you change the way you save playerPrefs to clean it
-		//PlayerPrefs.DeleteAll();
+		PlayerPrefs.DeleteAll();
 		
 		PlayerCharacter pcClass = player.GetComponent<PlayerCharacter>();
 //saving name

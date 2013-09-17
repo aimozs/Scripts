@@ -20,6 +20,7 @@ public class CharacterGenerator : MonoBehaviour {
 	private const int BASEVALUE_LABEL_WIDTH = 30;
 	
 	public GameObject playerPrefab;
+	public bool menu = true;
 	
 	
 //GUI style
@@ -32,7 +33,7 @@ public class CharacterGenerator : MonoBehaviour {
 //create the character
 		GameObject pc = Instantiate(playerPrefab, new Vector3(778,37,480), Quaternion.identity) as GameObject;
 		pc.name = "Player";
-			
+		DontDestroyOnLoad(pc);
 //		_toon = new PlayerCharacter();
 //		_toon.Awake();
 		_toon = pc.GetComponent<PlayerCharacter>();
@@ -55,6 +56,7 @@ public class CharacterGenerator : MonoBehaviour {
 //will be display as UI
 
 		void OnGUI(){
+			if (menu == true){
 			GUI.skin = VentrueSkin;
 			DisplayName();
 			DisplayVitals();
@@ -62,7 +64,9 @@ public class CharacterGenerator : MonoBehaviour {
 			DisplayAttribute();
 			DisplaySkills();
 			DisplayCreateButton();
+			}
 		}
+	
 // first line (40), name, points to spend on stats
 	private void DisplayName() {
 		GUI.Label(new Rect(	Offset, 					//x
@@ -179,19 +183,28 @@ public class CharacterGenerator : MonoBehaviour {
 	}
 	
 	private void DisplayCreateButton() {
+		
+		if(_toon.Name != ""){
 
 //that button save the data and load parcLaf at the beginning of the game
-	if (GUI.Button(new Rect(	StatLabelWidth*3 + Offset *5,
-							Screen.height - 100,
-							StatLabelWidth,
-							LINE_HEIGHT), "Create")) {
-			GameSettings gsScript = GameObject.Find("__GameSettings").GetComponent<GameSettings>();
+			if (GUI.Button(new Rect(	StatLabelWidth*3 + Offset *5,
+										Screen.height - 100,
+										StatLabelWidth,
+										LINE_HEIGHT), "Create")) {
+				GameSettings gsScript = GameObject.Find("__GameSettings").GetComponent<GameSettings>();
 			
 			//change the cur value of the vitals to the max of the modified value
-			
-			gsScript.SaveCharacterData();
+				UpdateCurVitalVal();
+				menu = false;
+				gsScript.SaveCharacterData();
 				
-			Application.LoadLevel("parcLaf");
+			}
+		}
+	}
+	
+	private void UpdateCurVitalVal(){
+		for(int cnt = 0; cnt < Enum.GetValues(typeof(VitalName)).Length; cnt++) {
+			_toon.GetVital(cnt).CurValue = _toon.GetVital(cnt).AdjustedBaseValue;
 		}
 	}
 }

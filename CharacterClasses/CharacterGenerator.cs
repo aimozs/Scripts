@@ -19,19 +19,27 @@ public class CharacterGenerator : MonoBehaviour {
 	private const int BUTTON_WIDTH = 25;
 	private const int BASEVALUE_LABEL_WIDTH = 30;
 	
+	public GameObject playerPrefab;
+	
 	
 //GUI style
 	
-	public GUISkin	VentrueSkin;
+//	public GUISkin	VentrueSkin;
 	
 	
 // Use this for initialization
 	void Start () {
-		_toon = new PlayerCharacter();
-		_toon.Awake();
+//create the character
+		GameObject pc = Instantiate(playerPrefab, new Vector3(778,37,480), Quaternion.identity) as GameObject;
+		pc.name = "Player";
+			
+//		_toon = new PlayerCharacter();
+//		_toon.Awake();
+		_toon = pc.GetComponent<PlayerCharacter>();
 		
 		expPointsLeft = STARTING_POINTS;
-		
+
+//assign the base value to attribute the first time
 		for(int cnt = 0; cnt < Enum.GetValues(typeof(AttributeName)).Length; cnt++) {
 			_toon.GetPrimaryAttribute(cnt).BaseValue = MIN_STARTING_ATTRIBUTE_VALUE;
 		}
@@ -41,22 +49,21 @@ public class CharacterGenerator : MonoBehaviour {
 	
 // Update is called once per frame
 	void Update () {
-
-
 		
 	}
 	
 //will be display as UI
-	void OnGUI(){
-		GUI.skin = VentrueSkin;
-		
-		DisplayName();
-		DisplayVitals();
-		DisplayExpPointsAvail();
-		DisplayAttribute();
-		DisplaySkills();
+
+		void OnGUI(){
+			GUI.skin = VentrueSkin;
+			DisplayName();
+			DisplayVitals();
+			DisplayExpPointsAvail();
+			DisplayAttribute();
+			DisplaySkills();
+			DisplayCreateButton();
 		}
-// first line (40)	
+// first line (40), name, points to spend on stats
 	private void DisplayName() {
 		GUI.Label(new Rect(	Offset, 					//x
 							statStartingPos,			//y
@@ -81,7 +88,7 @@ public class CharacterGenerator : MonoBehaviour {
 		
 	}
 
-//1st column
+//1st column, maxHealth, humanity, and maxVitae
 	private void DisplayVitals() {
 		for(int cnt = 0; cnt < Enum.GetValues(typeof(VitalName)).Length; cnt++) {
 			GUI.Label(new Rect(	Offset,
@@ -98,7 +105,7 @@ public class CharacterGenerator : MonoBehaviour {
 			
 		}
 	}
-//3rd line (250+30 for each attribute)
+//2nd line (250 from top +30 for each attribute), Intelligence etc...
 	private void DisplayAttribute() {
 		for(int cnt = 0; cnt < Enum.GetValues(typeof(AttributeName)).Length; cnt++) {
 			GUI.Label(new Rect(	Offset,
@@ -162,5 +169,17 @@ public class CharacterGenerator : MonoBehaviour {
 		}
 	}
 	
+	private void DisplayCreateButton() {
 
+//that button save the data and load parcLaf at the beginning of the game
+	if (GUI.Button(new Rect(	StatLabelWidth*3 + Offset *5,
+							Screen.height - 100,
+							StatLabelWidth,
+							LINE_HEIGHT), "Create")) {
+			GameSettings gsScript = GameObject.Find("__GameSettings").GetComponent<GameSettings>();
+			gsScript.SaveCharacterData();
+				
+			Application.LoadLevel("parcLaf");
+		}
+	}
 }

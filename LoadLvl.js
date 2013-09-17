@@ -2,12 +2,15 @@
 //in unity, assign the index level to load for each
 var level : int;
 var player : GameObject;
+var spawnPosX : int;
+var spawnPosY : int;
+var spawnPosZ : int;
 var lastScene : int;
 
 
 function Awake () {
 	//discover at each scene load the FPC and assign it to player
-	player = GameObject.Find("First Person Controller");
+	player = GameObject.Find("Player");
 	// Make this game object and all its transform children survive when loading a new scene.
 	DontDestroyOnLoad (player);
 	lastScene = Application.loadedLevel;

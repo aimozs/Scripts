@@ -21,7 +21,7 @@ public class PlayerAttack : MonoBehaviour {
 		if(attackTimer < 0)
 			attackTimer = 0;
 		
-		if(Input.GetKeyUp(KeyCode.F)) {
+		if(Input.GetKeyUp(KeyCode.G)) {
 			if(attackTimer ==0){
 				Attack();
 				attackTimer =  coolDown;

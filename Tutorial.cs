@@ -64,8 +64,14 @@ public class Tutorial : MonoBehaviour {
 		}
 	}
 
-	void OnGUI(){
+
+
+	void OnGUI()
+	{
+		if (tuto != "")
+		{
 		GUI.Box(new Rect(10, 200, 300, 20), tuto);
+		}
 		
 	}
 }

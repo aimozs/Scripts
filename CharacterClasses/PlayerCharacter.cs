@@ -1,3 +1,4 @@
-﻿public class PlayerCharacter : BaseCharacter {
+﻿public class PlayerCharacter : BaseCharacter
+{
 
 }

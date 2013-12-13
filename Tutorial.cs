@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Tutorial : MonoBehaviour {
+public class Tutorial : MonoBehaviour
+{
 	public bool tutoMove = false;
 	private bool tutoFlash = false;
 	private bool tutoForw = false;
@@ -11,14 +12,15 @@ public class Tutorial : MonoBehaviour {
 	public string tuto;
 
 	// Use this for initialization
-	void Start () {
+	void Start ()
+	{
 
 
 	}
 	
 	// Update is called once per frame
-	void Update () {
-	
+	void Update ()
+	{
 		if (Input.GetKeyUp(KeyCode.F))
 		{
 			tutoFlash = true;

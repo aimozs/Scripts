@@ -1,19 +1,23 @@
 using System.Collections.Generic;
 
-public class ModifiedStat : BaseStat{
+public class ModifiedStat : BaseStat
+{
 	private List<ModifyingAttribute> _mods;		//a list of attribute that modify the stat
 	private int _modValue;						// the amount added the baseValue from the modifiers
 	
-	public ModifiedStat(){
+	public ModifiedStat()
+	{
 		_mods = new List<ModifyingAttribute>();
 		_modValue = 0;
 	}
 	
-	public void AddModifier(ModifyingAttribute mod) {
+	public void AddModifier(ModifyingAttribute mod) 
+	{
 		_mods.Add(mod);
 	}
 	
-	private void CalculateModValue(){
+	private void CalculateModValue()
+	{
 		_modValue = 0;
 		
 		if(_mods.Count >0)
@@ -21,20 +25,24 @@ public class ModifiedStat : BaseStat{
 				_modValue += (int)(att.attribute.AdjustedBaseValue * att.ratio);
 	}
 	
-	public new int AdjustedBaseValue{
+	public new int AdjustedBaseValue
+	{
 		get{ return BaseValue + BuffValue + _modValue; }
 	}
 	
-	public void Update() {
+	public void Update()
+	{
 		CalculateModValue();
 	
 	}
 	
-	public string GetModifyingAttributes() {
+	public string GetModifyingAttributes() 
+	{
 		string temp = "";
 		
 //		UnityEngine.Debug.Log(_mods.Count);
-		for (int cnt = 0; cnt < _mods.Count; cnt++) {
+		for (int cnt = 0; cnt < _mods.Count; cnt++) 
+		{
 			temp += _mods[cnt].attribute.Name;
 			temp += "_";
 			temp += _mods[cnt].ratio;
@@ -51,11 +59,13 @@ public class ModifiedStat : BaseStat{
 }
 
 
-public struct ModifyingAttribute {
+public struct ModifyingAttribute 
+{
 	public Attribute attribute;
 	public float ratio;
 	
-	public ModifyingAttribute(Attribute att, float rat) {
+	public ModifyingAttribute(Attribute att, float rat) 
+	{
 		attribute = att;
 		ratio = rat;
 	}

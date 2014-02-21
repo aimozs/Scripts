@@ -7,7 +7,7 @@ using System.Collections.Generic;
 public class Clans : MonoBehaviour
 {
 
-
+	/*
 	List<string> clans = new List<string>();
 	List<string> disciplines = new List<string>();
 	List<string> covenants = new List<string>();
@@ -41,7 +41,7 @@ public class Clans : MonoBehaviour
 		foreach(string data in disciplines)
 		{
 			Debug.Log (data);
-		}*/
+		}
 
 		covenants.Add("Invictus");
 		covenants.Add("Carthians");
@@ -52,10 +52,32 @@ public class Clans : MonoBehaviour
 		//show the string in the list covenant at the place #2
 		//Debug.Log (covenants[2]);
 	}
-	
+
+
 	// Update is called once per frame
 	void Update ()
 	{
 	
 	}
+
+/*public class Clan : MonoBehaviour 
+{
+		_curValue
+		public string clanName;
+		
+		public Discipline() 
+		{
+			_curValue = 0;
+			ExpToLevel = 50;
+			LevelModifier = 1.1f;
+		}
+
 }
+
+public enum clanName {
+		Daeva,
+		Gangrel,
+		Mehket,
+		Ventrue,
+		Nosferatu
+	*/}

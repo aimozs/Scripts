@@ -1,16 +1,21 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System;					// added to access the enum class
+using System.Collections;
 
 public class BaseCharacter : MonoBehaviour
 {
 	private string _name;
 	private int _level;
 	private uint _freeExp;
+	private string _kind; //unturned, ghoul, vampire, werewolf
+	private string _clan; //
+	private string _covenant;
 
 	private Attribute[] _primaryAttribute;
-	private Vital[] _vital;
+
+	private Vital[] _vital; //health, vitae, humanity
 	private Skill[] _skill;
+	//private Discipline[] _discipline;
 
 
 	public void Awake()

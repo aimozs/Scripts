@@ -16,15 +16,16 @@ public class Attribute : BaseStat {
 
 
 public enum AttributeName{
-	//mental
-		intelligenceMA,
-		witsMA,
-		resolveMA,
-			
+
 	//physic
 		strengthPA,
 		dexterityPA,
 		staminaPA,
+
+	//mental
+		intelligenceMA,
+		witsMA,
+		resolveMA,
 				
 	//social
 		apparenceSA,

@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System;
+using System.Collections;
 
 public class GameSettings : MonoBehaviour
 {
-
+	public string spawnTr;
+//awake is used at launch
 	void Awake()
 	{
 		DontDestroyOnLoad(this);
@@ -14,18 +15,18 @@ public class GameSettings : MonoBehaviour
 // Use this for initialization
 	void Start ()
 	{
-	
+
 	}
 	
 // Update is called once per frame
 	void Update ()
 	{
-	
+		Debug.Log(spawnTr);
 	}
 	
 	public void SaveCharacterData()
 	{
-		GameObject player = GameObject.Find("Player");
+		GameObject player = GameObject.Find("First Person Controller");
 		
 	//use that line below once if you change the way you save playerPrefs to clean it
 		//PlayerPrefs.DeleteAll();

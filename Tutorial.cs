@@ -9,6 +9,8 @@ public class Tutorial : MonoBehaviour
 	private bool tutoBack = false;
 	private bool tutoLeft = false;
 	private bool tutoRight = false;
+	private bool tutoInteract = false;
+	private bool tutoJump = false;
 	public string tuto;
 
 	// Use this for initialization
@@ -46,6 +48,15 @@ public class Tutorial : MonoBehaviour
 			tutoRight = true;
 		}
 
+		if (Input.GetKeyUp(KeyCode.E))
+		{
+			tutoInteract = true;
+		}
+		if (Input.GetKeyUp(KeyCode.Space))
+		{
+			tutoJump = true;
+		}
+
 		if (tutoForw && tutoBack && tutoLeft && tutoRight == true)
 		{
 			tutoMove = true;
@@ -53,13 +64,23 @@ public class Tutorial : MonoBehaviour
 
 		if (tutoMove == false)
 		{
-			tuto = "To move around use W,A,S,D";
+			tuto = "To move around use W,A,S,D..";
 		}
 
-				else if (tutoFlash == false)
-				{
-					tuto = "To turn the flashlight on and off use F";
-				}
+			else if (tutoFlash == false)
+			{
+				tuto = "To turn the flashlight on and off use F,";
+			}
+			else if(tutoJump == false)
+			{
+				tuto = "Pressing the space bar will make you jump,";
+			}
+
+			else if(tutoInteract == false)
+			{
+				tuto = "To interact with elements use E, choose the clan you want and 'interact' with its name!";
+			}
+
 		else
 		{
 			tuto = "";
@@ -72,7 +93,7 @@ public class Tutorial : MonoBehaviour
 	{
 		if (tuto != "")
 		{
-		GUI.Box(new Rect(10, 200, 300, 20), tuto);
+		GUI.Box(new Rect(10, 50, Screen.width-20, 30), tuto);
 		}
 		
 	}

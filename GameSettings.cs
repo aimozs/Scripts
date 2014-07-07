@@ -21,7 +21,7 @@ public class GameSettings : MonoBehaviour
 // Update is called once per frame
 	void Update ()
 	{
-		Debug.Log(spawnTr);
+		//Debug.Log(spawnTr);
 	}
 	
 	public void SaveCharacterData()

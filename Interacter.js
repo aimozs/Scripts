@@ -1,6 +1,9 @@
 var interactLayers : LayerMask = -1;
-var interactRange : float = 2.0f;
+var interactRange : float = 50.0f;
 var hit : RaycastHit;
+var boxWidth : int = 200;
+
+var maxHealthBarLength = (Screen.width / 3);
 
 function Update()
 {
@@ -13,8 +16,18 @@ function Update()
 
 function OnGUI()
 {
-	if (hit.collider.name != ("" || "First Person Controller"))
+	if (hit.collider.tag == "Interact")
 	{
-		GUI.Box(new Rect(Screen.width/2-50, Screen.height/2+50, 200, 20), hit.collider.name);
+		GUI.Box(new Rect(Screen.width/2 - boxWidth/2, Screen.height/2-100, boxWidth, 25), hit.collider.name);
+	}
+	
+	if (hit.collider.tag == "NPC")
+	{
+		GUI.Box(new Rect(Screen.width/2 - boxWidth/2, Screen.height/2-100, boxWidth, 25), "Talk to" + hit.collider.name);
+	}
+	
+	if (hit.collider.tag == "Enemy")
+	{
+		GUI.Box(new Rect(maxHealthBarLength*2-60, 10, 40, 20), hit.collider.name);
 	}
 }

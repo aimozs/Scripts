@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Tutorial : MonoBehaviour
+public class RETutorial : MonoBehaviour
 {
 	public bool tutoMove = false;
 	private bool tutoFlash = false;
@@ -62,14 +62,14 @@ public class Tutorial : MonoBehaviour
 			tutoMove = true;
 		}
 
-		if (tutoMove == false)
+		if (tutoFlash == false)
 		{
-			tuto = "To move around use W,A,S,D..";
+			tuto = "To turn the flashlight on and off use F,";
 		}
 
-			else if (tutoFlash == false)
+			else if (tutoMove == false)
 			{
-				tuto = "To turn the flashlight on and off use F,";
+				tuto = "To move around use W,A,S,D,";
 			}
 			else if(tutoJump == false)
 			{
@@ -78,7 +78,7 @@ public class Tutorial : MonoBehaviour
 
 			else if(tutoInteract == false)
 			{
-				tuto = "To interact with elements use E, choose the clan you want and 'interact' with its name!";
+				tuto = "Press E to interact with doors and other elements!";
 			}
 
 		else
@@ -93,7 +93,7 @@ public class Tutorial : MonoBehaviour
 	{
 		if (tuto != "")
 		{
-		GUI.Box(new Rect(10, 200, Screen.width-20, 30), tuto);
+		GUI.Box(new Rect(10, 50, Screen.width-20, 30), tuto);
 		}
 		
 	}

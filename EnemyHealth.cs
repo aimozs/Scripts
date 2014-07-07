@@ -11,15 +11,16 @@ public class EnemyHealth : MonoBehaviour
 	//depending on the distance, tell the OnGUI to display enemy's healthbar
 	public bool displayEnemyHealth = false;
 	//define how big is the healthBar
-	public float healthBarLength;
+	public float enemyHealthBarLength;
+	public float maxHealthBarLength;
 
 	public int maxHealth = 100;
 	public int curHealth = 100;
 	
-	// Use this for initialization
+
 	void Start ()
 	{
-		healthBarLength = Screen.width / 2;
+		maxHealthBarLength = Screen.width / 3;
 
 		//defining enemy's position
 		enemyTransform = (GameObject.FindGameObjectWithTag("Enemy")).transform;
@@ -28,18 +29,20 @@ public class EnemyHealth : MonoBehaviour
 		playerTransform = (GameObject.FindGameObjectWithTag("Player")).transform;
 	}
 	
-	// Update is called once per frame
+
 	void Update ()
 	{
 		AdjustCurHealth(0);
 
+		//define the distance between player and enemy, if closer than 50m, display it
 		enemyDist = Vector3.Distance(enemyTransform.position, playerTransform.position);
-
-
-		displayEnemyHealth = false;
 		if(enemyDist < 50)
 		{
 			displayEnemyHealth = true;
+		}
+		else
+		{
+			displayEnemyHealth = false;
 		}
 	}
 
@@ -48,7 +51,8 @@ public class EnemyHealth : MonoBehaviour
 		// if distance < 50 display enemy's health
 		if(displayEnemyHealth == true)
 		{
-			GUI.Box(new Rect(10, 40, healthBarLength, 20), curHealth + "/" + maxHealth);
+			//GUI.Box(new Rect(Screen.width*2/3 - 10, 10, maxHealthBarLength, 20), "" + curHealth);
+			GUI.Box(new Rect(Screen.width*2/3 - 10, 10, enemyHealthBarLength, 20), "" + curHealth);
 		}
 	}
 
@@ -66,6 +70,6 @@ public class EnemyHealth : MonoBehaviour
 		if(maxHealth < 1)
 			maxHealth = 1;
 		
-		healthBarLength = (Screen.width / 2) * (curHealth / (float)maxHealth);
+		enemyHealthBarLength = maxHealthBarLength * (curHealth / (float)maxHealth);
 	}
 }

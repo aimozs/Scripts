@@ -16,6 +16,9 @@ public class EnemyHealth : MonoBehaviour
 
 	public int maxHealth = 100;
 	public int curHealth = 100;
+
+	public GameObject effect;
+//	public GameObject E;
 	
 
 	void Start ()
@@ -44,6 +47,12 @@ public class EnemyHealth : MonoBehaviour
 		{
 			displayEnemyHealth = false;
 		}
+
+		if (curHealth <= 0)
+		{
+			Instantiate(effect, gameObject.transform.position, Quaternion.identity);
+			Destroy(gameObject);
+		}
 	}
 
 	void OnGUI()
@@ -56,6 +65,14 @@ public class EnemyHealth : MonoBehaviour
 		}
 	}
 
+	void OnTriggerEnter(Collider other)
+	{
+		if(other.tag == "weapon")
+		{
+			AdjustCurHealth(-10);
+		}
+		
+	}
 	
 	public void AdjustCurHealth(int adj)
 	{

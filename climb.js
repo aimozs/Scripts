@@ -1,26 +1,31 @@
-﻿
-var climbSpeed : float = 2.0f;
-var canClimb : boolean = false;
+﻿var climbSpeed : float = 2.0f;
+private var canClimb : boolean = false;
 
-function Start () {
-
+function Update () 
+{
+	if (canClimb == true)
+	{
+		if(Input.GetKey(KeyCode.W))
+		{
+			transform.Translate(0, climbSpeed * Time.deltaTime, 0, Space.World);
+		}
+	}
 }
 
 function OnTriggerEnter (other : Collider) 
     {
-    	canClimb = true;
+    	if (other.tag == "ladder")
+    	{
+    		canClimb = true;
+    		Debug.Log("climb on");
+    	}
+    	
 	}
 function OnTriggerExit (other : Collider) 
     {
-    	canClimb = false;
+    	if (other.tag == "ladder")
+    	{
+    		canClimb = false;
+	    	Debug.Log("climb off");
+	    }
 	}
-
-
-function Update () {
-	if (canClimb == true){
-		if(Input.GetKey(KeyCode.W)){
-			transform.Translate(0, climbSpeed * Time.deltaTime, 0, Space.World);
-		}
-	}
-
-}

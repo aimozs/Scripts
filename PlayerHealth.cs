@@ -12,20 +12,10 @@ public class PlayerHealth : MonoBehaviour
 	private float barWidthPos;
 	private float barHeightPos;
 	private float barThickness;
-
-	//
+	
 	public GUIStyle Health;
 	public GUIStyle Vitae;
-	//public GUISkin Ventrue;
 
-	
-	// Use this for initialization
-	void Start ()
-	{
-		//define the length of the health bar
-
-	}
-	
 	// Update is called once per frame
 	void Update ()
 	{

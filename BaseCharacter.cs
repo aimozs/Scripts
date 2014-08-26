@@ -7,15 +7,14 @@ public class BaseCharacter : MonoBehaviour
 	private string _name;
 	private int _level;
 	private uint _freeExp;
-	private string _kind; //unturned, ghoul, vampire, werewolf
-	private string _clan; //
-	private string _covenant;
-
+	private bool gender;
+	private decimal heigth;
+	
 	private Attribute[] _primaryAttribute;
 
-	private Vital[] _vital; //health, vitae, humanity
+	private Vital[] _vital;
 	private Skill[] _skill;
-	//private Discipline[] _discipline;
+
 
 
 	public void Awake()
@@ -54,7 +53,6 @@ public class BaseCharacter : MonoBehaviour
 	public void AddExp(uint exp)
 	{
 		_freeExp += exp;
-		
 		CalculateLevel();
 	}
 

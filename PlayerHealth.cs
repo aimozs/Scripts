@@ -1,4 +1,5 @@
 using UnityEngine;
+
 using System.Collections;
 
 public class PlayerHealth : MonoBehaviour
@@ -9,35 +10,33 @@ public class PlayerHealth : MonoBehaviour
 	private float maxHealthBarLength;
 	private float healthBarLength;
 
-	private float barWidthPos;
-	private float barHeightPos;
-	private float barThickness;
+	private float barWidthPos = 20;
+	private float barHeightPos = 30;
+	private float barThickness = 20;
 	
 	public GUIStyle Health;
 	public GUIStyle Vitae;
 
+	void Awake()
+	{
+
+	}
+
 	// Update is called once per frame
 	void Update ()
 	{
-		barWidthPos = Screen.width*2/100;
-		barHeightPos = Screen.height*1/100;
-		barThickness = 20;
-
 		maxHealthBarLength = (Screen.width/3);
 		AdjustCurHealth(0);
 	}
 	
 	void OnGUI()
 	{
-		//GUI.skin = Ventrue;
+
 
 		GUI.Box(new Rect(barWidthPos, barHeightPos, healthBarLength, barThickness), "", Health);
 		GUI.Box(new Rect(barWidthPos, barHeightPos, maxHealthBarLength, barThickness), "Health");
-	
-		GUI.Box(new Rect(barWidthPos, barHeightPos*2+barThickness, maxHealthBarLength, barThickness), "", Vitae);
-		GUI.Box(new Rect(barWidthPos, barHeightPos*2+barThickness, healthBarLength, barThickness), "Vitae");
-	
-		GUI.Box(new Rect(maxHealthBarLength + barWidthPos*2, barHeightPos, (barThickness+barHeightPos)*2.5f, (barThickness+barHeightPos)*2.5f), "Discipline", Vitae);
+
+
 
 	}
 	

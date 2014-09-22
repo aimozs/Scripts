@@ -4,11 +4,35 @@ using System.Collections;
 
 public class GameSettings : MonoBehaviour
 {
+	//level
 	public string spawnTr;
+
+	//character
+	public string clan = "Human";
+	string covenant;
+	
+	int curHealth = 100;
+	int maxHealth = 100;
+
+	//positions
+	int x = 10;
+	int y = 10;
+	int barThickness = 25;
+	float barHeightPos;
+	int disBox = 75;
+
+	//sizes
+	public float healthBarLength;
+	public float maxHealthBarLength;
+
+	//styles
+	public GUIStyle Health;
+
 //awake is used at launch
 	void Awake()
 	{
 		DontDestroyOnLoad(this);
+		barHeightPos = (barThickness + y);
 	}
 
 
@@ -21,7 +45,37 @@ public class GameSettings : MonoBehaviour
 // Update is called once per frame
 	void Update ()
 	{
-		//Debug.Log(spawnTr);
+		healthBarLength = (Screen.width/3*curHealth/maxHealth);
+		maxHealthBarLength = (Screen.width/3);
+
+
+
+	}
+
+	void OnGUI()
+	{
+		//character
+		GUI.Box(new Rect(x, y, maxHealthBarLength, barThickness), clan + covenant);
+
+		GUI.Box(new Rect(x, barHeightPos, healthBarLength, barThickness), "", Health);
+		GUI.Box(new Rect(x, barHeightPos, maxHealthBarLength, barThickness), (curHealth).ToString() +" / "+ (maxHealth).ToString());
+
+	}
+
+	public void AdjustCurHealth(int adj)
+	{
+		curHealth += adj;
+		
+		if(curHealth < 0)
+			curHealth = 0;
+		
+		if(curHealth > maxHealth)
+			curHealth = maxHealth;
+		
+		if(maxHealth < 1)
+			maxHealth = 1;
+		
+		healthBarLength = maxHealthBarLength * (curHealth / maxHealth);
 	}
 	
 	public void SaveCharacterData()

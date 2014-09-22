@@ -1,9 +1,9 @@
 var interactLayers : LayerMask = -1;
-var interactRange : float = 50.0f;
+var interactRange : float = 5.0f;
 var hit : RaycastHit;
 var boxWidth : int = 200;
-var interactHeight = Screen.height/2-100;
-var interactOrigin = Screen.width/2 - boxWidth/2;
+var interactHeight : float = (Screen.height/2);
+var interactOrigin : float = (Screen.width/2 + 50);
 
 function Update()
 {
@@ -23,7 +23,7 @@ function OnGUI()
 	
 	if (hit.collider.tag == "Level")
 	{
-		GUI.Box(new Rect(interactOrigin, interactHeight, boxWidth, 25), "Open (E)");
+		GUI.Box(new Rect(interactOrigin, interactHeight, boxWidth, 25), "Go (E)");
 	}
 	
 	if (hit.collider.tag == "NPC")

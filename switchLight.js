@@ -1,5 +1,6 @@
 var targetL : Light;
 
-function OnInteract() {
+function OnInteract()
+{
     targetL.enabled = !targetL.enabled;
 }

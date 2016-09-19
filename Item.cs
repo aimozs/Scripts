@@ -1,23 +1,36 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-[RequireComponent (typeof (BoxCollider))]
+[RequireComponent (typeof (Collider))]
 
-public class Item : MonoBehaviour
-{
-	public enum itemTypes {key, quest, weapon, ammo};
-	public itemTypes itemType;
+public class Item : MonoBehaviour, ICollectable, IInteractable {
 
-	void OnInteract(GameObject interacter)
-	{
-		switch(itemType)
-		{
-		case itemTypes.weapon:
-			interacter.GetComponent<BaseCharacter>().AddToWeapons(gameObject);
-			break;
-		default:
-			interacter.GetComponent<BaseCharacter>().AddToInventory(gameObject);
-			break;
+	public float weight;
+	public float price;
+	public string notification;
+	public bool increaseProg = false;
+	public Globals.Conviction conviction;
+	public int toStep = 0;
+
+	public void OnInteract(){
+		PickUp();
+
+		if(notification != ""){
+			UIManager.Notify(notification);
 		}
 	}
+
+	public GameObject GetGameObject(){
+		return gameObject;
+	}
+
+	public void PickUp(){
+		AddToInventory();
+//		Destroy(gameObject);
+	}
+
+	public void AddToInventory(){
+		InventoryManager.AddToInventory(gameObject);
+	}
+
 }

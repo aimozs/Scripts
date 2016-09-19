@@ -2,33 +2,22 @@
 using UnityEngine.UI;
 using System.Collections;
 
-public class Weapon : Item 
-{
-	public string nameWeapon;
-	public Sprite iconWeapon;
-	public AudioClip soundWeapon;
-	public Animation animWeapon;
+public class Weapon : MonoBehaviour, IInteractable {
+
 	public Ammo ammoWeapon;
+	public Animation animWeapon;
+	public AudioClip soundWeapon;
+	public Sprite iconWeapon;
 
-	private Transform spawnPoint;
 
-	// Use this for initialization
-	void Start () {
-		itemType = itemTypes.weapon;
-		nameWeapon = gameObject.name;
-//		iconWeapon = Resources.Load<Sprite>(nameWeapon);
-//		soundWeapon = Resources.Load<AudioClip>(nameWeapon);
-//		if(ammoWeapon == null)
-//			GetAmmo(nameWeapon);
-		spawnPoint = GameObject.Find("spawnPoint").transform;
+	public void OnInteract(){
+		GameSettings.Instance.player.GetComponent<BaseCharacter>().AddToWeapons(gameObject);
+	}
+
+	public GameObject GetGameObject(){
+		return gameObject;
 	}
 	
-	void Update () {
-		if(Input.GetButtonDown("Fire1") && transform.parent.name == "fist") {
-			Attack();	
-		}
-	}
-
 //	void GetAmmo(string nameWeapon) {
 //		switch(nameWeapon) {
 //		case "bow":
@@ -42,12 +31,17 @@ public class Weapon : Item
 
 	public void Attack() {
 		if(ammoWeapon != null) {
-			GameObject bullet =  Instantiate(ammoWeapon.gameObject, spawnPoint.position, spawnPoint.rotation) as GameObject;
-			bullet.GetComponent<Rigidbody>().AddForce(transform.forward * 1000);
+			GameObject bullet =  Instantiate(ammoWeapon.gameObject, transform.position, transform.rotation) as GameObject;
+			bullet.GetComponent<Rigidbody>().AddForce(transform.up * 1000);
 			Destroy (bullet, 5);
+			GameSettings.Instance.player.GetComponent<BaseCharacter>().AnimateRange();
+		} else {
+			GameSettings.Instance.player.GetComponent<BaseCharacter>().AnimateBrawl();
 		}
 
-		if(soundWeapon != null)
-			SoundManager.Instance.PlaySound(soundWeapon);
+//		if(soundWeapon != null)
+//			SoundManager.Instance.PlaySound(soundWeapon);
 	}
+
+
 }

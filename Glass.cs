@@ -2,29 +2,27 @@
 using System.Collections;
 
 [RequireComponent (typeof (BoxCollider))]
-public class Glass : MonoBehaviour
-{
+public class Glass : MonoBehaviour, IBreakable, IInteractable {
 
 	public GameObject brokenGlass;
-	// Use this for initialization
-	void Start ()
-	{
-	
-	}
-	
-	// Update is called once per frame
-	void Update ()
-	{
-	
+	public AudioClip audioFx;
+
+	public void OnInteract() {
+		Break();
 	}
 
-	void OnInteract()
-	{
-		if(brokenGlass != null)
-		{
+	public GameObject GetGameObject(){
+		return gameObject;
+	}
+
+	public void Break(){
+		if(brokenGlass != null) {
 			Instantiate(brokenGlass, transform.position, transform.rotation);
-			Destroy(gameObject);
 		}
 
+		if(audioFx != null)
+			SoundManager.PlaySound(audioFx);
+		
+		Destroy(gameObject);
 	}
 }

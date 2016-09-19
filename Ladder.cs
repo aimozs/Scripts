@@ -2,59 +2,33 @@
 using System.Collections;
 
 [RequireComponent (typeof (BoxCollider))]
-public class Ladder : MonoBehaviour
-{
-	private GameObject player;
-	private float height;
-	// Use this for initialization
-	void Start ()
-	{
+public class Ladder : MonoBehaviour {
+
+	public static int playerTriggerBelonging = 0;
+
+	void Start () {
 		gameObject.GetComponentInChildren<BoxCollider>().isTrigger = true;
-	
-	}
-	
-	// Update is called once per frame
-	void Update () 
-	{
-		//if(player == null)
-		//	player = GameObject.FindWithTag("Player");
-		if(player != null)
-		{
-			if(Input.GetKey(KeyCode.W))
-			{
-				Debug.Log ("Player " + player.name + " is climbing (pos:)" + height);
-				height = height + .05f;
-				Vector3 up = new Vector3(player.transform.position.x, height, player.transform.position.z);
-					Debug.Log(up);
-				player.transform.position = up;
-			}
-			else
-				player.transform.position = new Vector3(player.transform.position.x, height, player.transform.position.z);
-		}
-
-
 	}
 
+//	void OnTriggerStay(Collider other){
+//		if(other.CompareTag("Player") && Input.GetAxis("Vertical") > 0.1f){
+//			other.transform.Translate(Vector3.up * Input.GetAxis("Vertical"));
+//		}
+//
+//	}
 
-	void OnTriggerEnter(Collider collider)
-	{
-		//Detect player
-		if(collider.transform.root.gameObject.CompareTag("Player"))
-		{
-			player = collider.transform.root.gameObject;
-			Debug.Log ("player detected: " + player.name);
-			height = player.transform.position.y;
-			Debug.Log (height);
+	void OnTriggerEnter(Collider other){
+		if(other.CompareTag("Player")){
+			playerTriggerBelonging++;
+			other.GetComponent<BaseCharacter>().Climb(true);
 		}
 	}
 
-	void OnTriggerExit(Collider collider)
-	{
-		if(collider.transform.root.gameObject.CompareTag("Player"))
-		{
-			player = collider.transform.root.gameObject;
-			Debug.Log ("player exiting : " + player.name);
-			player = null;
+	void OnTriggerExit(Collider other){
+		if(other.CompareTag("Player")){
+			playerTriggerBelonging--;
+			if(playerTriggerBelonging == 0)
+				other.GetComponent<BaseCharacter>().Climb(false);
 		}
 	}
 }

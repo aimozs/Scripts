@@ -4,7 +4,7 @@ using UnityEngine.UI;
 public class Vital : MonoBehaviour
 {
 	public enum VitalName{Health, Humanity, Vitae};
-	public VitalName name;
+	public VitalName vitalName;
 	public Slider sliderUI;
 	public float value;
 }

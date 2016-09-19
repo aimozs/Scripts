@@ -1,27 +1,10 @@
-public class Vital : ModifiedStat {
-	
-	private int _curValue;
-		
-	public Vital() {
-		_curValue = 0;
-		ExpToLevel = 50;
-		LevelModifier = 1.1f;
-	}
-	
-	public int CurValue {
-		get{
-			if(_curValue > AdjustedBaseValue)
-				_curValue = AdjustedBaseValue;
-			
-			return _curValue;
-		}
-		set{ _curValue = value; }
-	}
-}
+using UnityEngine;
+using UnityEngine.UI;
 
-
-public enum VitalName {
-	Health,
-	Humanity,
-	Vitae
+public class Vital : MonoBehaviour
+{
+	public enum VitalName{Health, Humanity, Vitae};
+	public VitalName vitalName;
+	public Slider sliderUI;
+	public float value;
 }

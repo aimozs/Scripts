@@ -44,7 +44,7 @@ public class AINPC : MonoBehaviour
 		if (Vector3.Distance(_transform.position, _target) > range)
 		{
 			Move();
-			animation.CrossFade("walk");
+			GetComponent<Animation>().CrossFade("walk");
 			//			Debug.Log ("walking toward target");
 		}
 		else

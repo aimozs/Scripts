@@ -1,69 +1,52 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Vampire : PlayerCharacter
+public class Vampire : BaseCharacter
 {
-	private string _sir;
-	private string _mentor;
-	private string _clan;
-	private string _covenant;
-//	private Discipline[] _discipline;
-	private int _vitae;
-	private string intro;
-
+	/*private Vampie _sir;
+	private BaseCharacter _mentor;
+	private Clan _clan;
+	private Covenant _covenant;
+	private Discipline[] _disciplines;
 
 	public void Awake()
 	{
-		_sir = "Someone";
-		_mentor = "Echnor";
-		_clan = "Daeva";
-		_covenant = "Carthians";
-
-//		switch (_clan) 
-//		{
-//			case "Daeva":
-//				_discipline[1] = "Celerity";
-//				_discipline[2] = "Majesty";
-//				_discipline[3] = "Vigor";
-//				break;
-//			case "Gangrel":
-//				_discipline[1] = "Animalism";
-//				_discipline[2] = "Resilience";
-//				_discipline[3] = "Protean";
-//				break;
-//			case "Ventrue":
-//				_discipline[1] = "Animalism";
-//				_discipline[2] = "Resilience";
-//				_discipline[3] = "Dominate";
-//				break;
-//			case "Nosferatu":
-//				_discipline[1] = "Nightmate";
-//				_discipline[2] = "Vigor";
-//				_discipline[3] = "Obfuscate";
-//				break;
-//			case "Daeva":
-//				_discipline[1] = "Obfuscate";
-//				_discipline[2] = "Celerity";
-//				_discipline[3] = "Auspex";
-//				break;
-//			default:
-//				;
-//		}
-
-		_vitae = 10;
-		intro = "Personnal infos:\n" +
-				"Your Sire: " + _sir + "\n"+
-				"Your Clan: " + _clan + "\n"+
-				"Current Mentor: " + _mentor + "\n"+
-				"Your covenant: " + _covenant + "\n"
-				;
+		if(_clan != null)
+			SetupDisciplines(_clan);
 	}
 
-	void OnGUI()
+	private void SetupDisciplines(_clan)
 	{
-		if(Input.GetKey(KeyCode.I))
+		switch (_clan) 
 		{
-			GUI.Label(new Rect(10, 300, 300, 500), intro);
+		case "Daeva":
+			_disciplines[1] = "Celerity";
+			_disciplines[2] = "Majesty";
+			_disciplines[3] = "Vigor";
+			break;
+		case "Gangrel":
+			_disciplines[1] = "Animalism";
+			_disciplines[2] = "Resilience";
+			_disciplines[3] = "Protean";
+			break;
+		case "Ventrue":
+			_disciplines[1] = "Animalism";
+			_disciplines[2] = "Resilience";
+			_disciplines[3] = "Dominate";
+			break;
+		case "Nosferatu":
+			_disciplines[1] = "Nightmate";
+			_disciplines[2] = "Vigor";
+			_disciplines[3] = "Obfuscate";
+			break;
+		case "Daeva":
+			_disciplines[1] = "Obfuscate";
+			_disciplines[2] = "Celerity";
+			_disciplines[3] = "Auspex";
+			break;
+		default:
+			_disciplines[1] = "Faith";
+			;
 		}
-	}
+	}*/
 }

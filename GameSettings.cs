@@ -1,127 +1,342 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
-public class GameSettings : MonoBehaviour
-{
-	//level
-	public string spawnTr;
+public class GameSettings : MonoBehaviour {
 
-	//character
-	public string clan = "Human";
-	string covenant;
+	public enum actionType {use, talk, open, loadLevel, hide};
+	public enum SceneType { publique, privee };
+
+	//Player stuff
+	public bool debugSettings;
+	public bool debugAI;
+	public bool debugInput = true;
+	public bool restoreGame = false;
+	public GameObject playerPrefab;
+
+	public string _nextLevel;
+	public string _spawn;
+
+	public GameObject player;
+	public GameObject mainUI;
+
+	//interactable
+	public GameObject interactable;
+
+	public RaycastHit hit;
+	private LayerMask interactLayers = -1;
+	public float interactRange = 3f;
+
+
+	private GameObject cursor;
 	
-	int curHealth = 100;
-	int maxHealth = 100;
+	//UI stuff
 
-	//positions
-	int x = 10;
-	int y = 10;
-	int barThickness = 25;
-	float barHeightPos;
-	int disBox = 75;
+	public bool pause = false;
 
-	//sizes
-	public float healthBarLength;
-	public float maxHealthBarLength;
+	public static Interactable[] targets;
 
-	//styles
-	public GUIStyle Health;
+	private static GameSettings instance;
+	public static GameSettings Instance {
+		get {
+			if(instance == null) {
+				instance = GameObject.FindObjectOfType<GameSettings>();
+			}
+			return instance;
+		}
+	}
 
-//awake is used at launch
-	void Awake()
-	{
-		DontDestroyOnLoad(this);
-		barHeightPos = (barThickness + y);
+	public delegate void UpdateGS();
+	public static event UpdateGS updateGS;
+
+
+	#region 0.Baasics
+	void Awake() {
+		InitPlayer();
+		Instantiate(mainUI);
+	}
+
+	void Start () {
+
+		DontDestroyOnLoad(player);
+
+		#if UNITY_WEBGL && !UNITY_EDITOR
+			DeactivateAllLevel();
+		#endif
+
+	}
+
+	void OnEnable(){
+//		Dialoguer.events.onMessageEvent += DialogueEvent;
+		SceneManager.sceneLoaded += InitScene;
+	}
+
+	void OnDisable(){
+//		Dialoguer.events.onMessageEvent -= DialogueEvent;
+		SceneManager.sceneLoaded -= InitScene;
+	}
+
+	#endregion
+
+	void InitScene(Scene scene, LoadSceneMode loadMode){
+		FindInteractable();
+
+		pause = false;
+
+		PixelCrushers.DialogueSystem.DialogueLua.SetVariable("location", scene.name);
+
+		ManageFixedUpdate();
+		UIManager.CloseContainer();
+	}
+
+	public void AddPower(string power){
+		PlayerBC.AddSpectrum(PowerManager.Instance.GetSpectrum(power), 3);
+	}
+
+	void DialogueEvent(string message, string metadata){
+
+		switch(message){
+
+		case "addPower":
+			player.GetComponent<BaseCharacter>().AddSpectrum(PowerManager.Instance.GetSpectrum(metadata));
+			break;
+
+		case "AddObjectToInventory":
+			Debug.Log("Looking for " + metadata);
+			GameObject item = GameObject.Find(metadata);
+			if(item != null)
+				InventoryManager.AddToInventory(item);
+			else
+				UIManager.Notify("Couldnt find " + metadata + " in scene");
+			break;
+
+		case "incrementProg":
+			int prog = int.Parse(metadata.Substring(0, 1));
+			int metalen = metadata.Length - 1;
+			metadata = metadata.Substring(1, metalen);
+			Globals.IncrementProgress(metadata, prog);
+			break;
+		}
+	}
+
+	public void IncrementProgress(string metadata){
+		int prog = int.Parse(metadata.Substring(0, 1));
+		int metalen = metadata.Length - 1;
+		metadata = metadata.Substring(1, metalen);
+		Globals.IncrementProgress(metadata, prog);
 	}
 
 
-// Use this for initialization
-	void Start ()
-	{
+//	Globals.Conviction GetSin(string metadata){
+//		return (Globals.Conviction) System.Enum.Parse(typeof(Globals.Conviction), metadata);
+//	}
 
+	public static bool TestInventory(string condition){
+		return Instance.PlayerInventory.Find(obj=>obj.name==condition);
+	}
+
+	public static bool TestInventory(GameObject condition){
+		return Instance.PlayerInventory.Contains(condition);
+	}
+
+	public static BaseCharacter PlayerBC{
+		get { return Instance.player.GetComponent<BaseCharacter>() ;}
+	}
+
+	public static string currentSceneName {
+		get { return SceneManager.GetActiveScene().name; }
+	}
+
+	void ManageFixedUpdate(){
+		if(currentSceneName == "Montreal"){
+//			Debug.Log("Starting FIXEDUPDATEGS");
+			InvokeRepeating("FixedUpdateGS", 2f, 5f);
+		} else {
+			CancelInvoke("FixedUpdateGS");
+		}
+	}
+
+	void FixedUpdateGS(){
+		if(updateGS != null){
+//			Debug.Log("Updating");
+			updateGS();
+		}
+	}
+
+	void FindTargets(){
+		FindInteractable();
+//		targets = null;
+//		targets = GameObject.FindObjectsOfType<NextLevel>();
+	}
+
+	void FindInteractable(){
+		targets = null;
+		targets = GameObject.FindObjectsOfType<Interactable>();
+		Debug.Log("Found interactables: " + targets.Length);
 	}
 	
-// Update is called once per frame
-	void Update ()
-	{
-		healthBarLength = (Screen.width/3*curHealth/maxHealth);
-		maxHealthBarLength = (Screen.width/3);
+	void FixedUpdate () {
 
-
-
+		if(!pause) {
+			GetInteractable();
+		}
 	}
 
-	void OnGUI()
-	{
-		//character
-		GUI.Box(new Rect(x, y, maxHealthBarLength, barThickness), clan + covenant);
+	public static void InitPlayer() {
+		Instance.player = GameObject.FindGameObjectWithTag("Player");
 
-		GUI.Box(new Rect(x, barHeightPos, healthBarLength, barThickness), "", Health);
-		GUI.Box(new Rect(x, barHeightPos, maxHealthBarLength, barThickness), (curHealth).ToString() +" / "+ (maxHealth).ToString());
+		if(Instance.player != null){
+//			if(Instance.debugSettings)
+//				Debug.Log("[GS] Found player " + Instance.player.name);
 
+		} else {
+			if(Instance.playerPrefab != null){
+				Instance.player = Instantiate(Instance.playerPrefab);
+//				if(Instance.debugSettings)
+//					Debug.Log("[GS] Player instantiated " + Instance.player.name);
+			}
+//			else {
+//				Debug.LogWarning("Player Object not found, and no playerPrefab to instatiate");
+//			}
+		}
 	}
 
-	public void AdjustCurHealth(int adj)
-	{
-		curHealth += adj;
-		
-		if(curHealth < 0)
-			curHealth = 0;
-		
-		if(curHealth > maxHealth)
-			curHealth = maxHealth;
-		
-		if(maxHealth < 1)
-			maxHealth = 1;
-		
-		healthBarLength = maxHealthBarLength * (curHealth / maxHealth);
+	public List<GameObject> PlayerInventory{
+		get { return player.GetComponent<BaseCharacter>().inventory; }
 	}
-	
-	public void SaveCharacterData()
-	{
-		GameObject player = GameObject.Find("First Person Controller");
-		
-	//use that line below once if you change the way you save playerPrefs to clean it
-		//PlayerPrefs.DeleteAll();
-		
-	
-		PlayerCharacter pcClass = player.GetComponent<PlayerCharacter>();
-	//saving name
-		PlayerPrefs.SetString("Player_Name", pcClass.Name);
-		PlayerPrefs.SetString("Player_Clan", pcClass.Name);
 
-	//saving the attribute
-		for(int cnt = 0; cnt < Enum.GetValues(typeof(AttributeName)).Length; cnt++)
-		{
-			PlayerPrefs.SetInt(((AttributeName)cnt).ToString() + " baseVal", pcClass.GetPrimaryAttribute(cnt).BaseValue);
-			PlayerPrefs.SetInt(((AttributeName)cnt).ToString() + " xpToLvl", pcClass.GetPrimaryAttribute(cnt).ExpToLevel);
+	public static GameObject GetRandomTarget(){
+//		if(NPCManager.Instance.debugNPC)
+//			Debug.Log ("Getting target from " + targets.Length);
+		
+		GameObject target = targets[UnityEngine.Random.Range(0, targets.Length-1)].GetGameObject();
+		
+		return target;
+	}
+
+	public GameObject GetInteractable() {
+		if(cursor == null) {
+			cursor = GameObject.Find("cursor");
 		}
 
-	//saving the vitals
-		for(int cnt = 0; cnt < Enum.GetValues(typeof(VitalName)).Length; cnt++)
-		{
-			PlayerPrefs.SetInt(((VitalName)cnt).ToString() + " baseVal", pcClass.GetVital(cnt).BaseValue);
-			PlayerPrefs.SetInt(((VitalName)cnt).ToString() + " xpToLvl", pcClass.GetVital(cnt).ExpToLevel);
-			PlayerPrefs.SetInt(((VitalName)cnt).ToString() + " CurrVal", pcClass.GetVital(cnt).CurValue);
-			PlayerPrefs.SetString(((VitalName)cnt) + " Mods", pcClass.GetVital(cnt).GetModifyingAttributes());
-		}
+		if(cursor != null){
+//			Debug.DrawRay(cursor.transform.position, -cursor.transform.up, Color.red, interactRange);
 
-	//saving the vitals
-		for(int cnt = 0; cnt < Enum.GetValues(typeof(SkillName)).Length; cnt++)
-		{
-			PlayerPrefs.SetInt(((SkillName)cnt).ToString() + " baseVal", pcClass.GetSkill(cnt).BaseValue);
-			PlayerPrefs.SetInt(((SkillName)cnt).ToString() + " xpToLvl", pcClass.GetSkill(cnt).ExpToLevel);
-			PlayerPrefs.SetString(((SkillName)cnt) + " Mods", pcClass.GetSkill(cnt).GetModifyingAttributes());
+			interactable = null;
+
+			if(Physics.Raycast (cursor.transform.position, -cursor.transform.up, out hit, interactRange, interactLayers)) {
+//				interactable = hit.collider.gameObject;
+				if(hit.collider != null){
+					if(hit.collider.GetComponent<BaseCharacter>()){
+						interactable = hit.collider.gameObject;
+						UIManager.UpdateAction(actionType.talk);
+
+					}
+
+					if(hit.collider.GetComponent<Container>()){
+						interactable = hit.collider.gameObject;
+						UIManager.UpdateAction(actionType.open);
+					}
+
+					if(hit.collider.GetComponent<NextLevel>()) {
+						interactable = hit.collider.gameObject;
+						UIManager.UpdateAction(actionType.loadLevel);
+					}
+
+					if(hit.collider.GetComponent<IInteractable>() != null){// || hit.collider.GetComponent<Valve>() ||hit.collider.GetComponent<Switch>()|| hit.collider.GetComponent<Door>()){
+						interactable = hit.collider.gameObject;
+						UIManager.UpdateAction(actionType.use);
+					}
+				}
+			}
+
+//			if(interactable == null)
+//				UIManager.Instance.HideAction();
 		}
-		
-	//saving disciplines
-		
-	//saving the level and position
+			
+//		if(interactable != null) {
+//
+//			if(interactable.GetComponent<BaseCharacter>()){
+//				UIManager.Instance.UpdateAction(actionType.talk);
+//			}
+//
+//			if(interactable.GetComponent<Container>()){
+//				UIManager.Instance.UpdateAction(actionType.open);
+//			}
+//
+//			if(interactable.GetComponent<NextLevel>()) {
+//				UIManager.Instance.UpdateAction(actionType.loadLevel);
+//			}
+//
+//			if(interactable.GetComponent<Item>() || interactable.GetComponent<Valve>() || interactable.GetComponent<Door>()){
+//				UIManager.Instance.UpdateAction(actionType.use);
+//			}
+//
+//		} else {
+//			UIManager.Instance.HideAction();
+//		}
+
+		return interactable;
 	}
-	
-	public void LoadCharacterData()
-	{
 
+	public static void Interact(){
+		GameObject interactable = Instance.GetInteractable();
+		if(interactable != null){
+			interactable.SendMessage("OnInteract", SendMessageOptions.DontRequireReceiver);
+//			if(interactable.GetComponent<BaseCharacter>() != null){
+//				Instance.StartDialogue(true);
+			if(!UIManager.PhoneVisible)
+				interactable.SendMessage("OnUse", Instance.player.transform, SendMessageOptions.DontRequireReceiver);
+//			}
+		}
+	}
+
+	public void StartDialogue(bool on){
+		UIManager.InConvo = on;
+		GameSettings.PlayerBC.EnableControls(!on);
+		UIManager.DisplayCursor(on);
+	}
+
+	public void Pause() {
+		UIManager.DisplayCursor(true);
+		Time.timeScale = 0;
+	}
+
+	public void Resume() {
+		Time.timeScale = 1;
+		UIManager.DisplayCursor(false);
+	}
+
+	public static NextLevel StoreNextLevelData {
+		set {
+			instance._nextLevel = value.level;
+			instance._spawn = value.spawn;
+		}
+	}
+
+//	public void AddToInventoryFromContainer(GameObject item) {
+//		PlayerInventory().Add(item);
+////		item.transform.parent = GameSettings.Instance.player.transform;
+////		item.transform.localPosition = Vector3.zero;
+////		item.transform.localScale = Vector3.zero;
+//		InventoryManager.AddToInventory(item);
+//		Debug.Log (item.name + " has been added to the inventory");
+//		GameSettings.Instance.RemoveFromCurrentContainer(item);
+//	}
+
+
+
+//	public void DepositItemInContainer(GameObject item){
+//		currentContainer.Deposit(item);
+//	}
+
+	void DeactivateAllLevel(){
+		NextLevel[] levels = GameObject.FindObjectsOfType<NextLevel>();
+		foreach(NextLevel level in levels){
+			level.Lock();
+		}
 	}
 }
